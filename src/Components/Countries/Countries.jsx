@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 import Country from '../Country/Country'
-
+import './Countries.css'
 
 const Countries = () => {
 
     const [countries, setCountries] = useState([])
+    const [visitedCountries, setVisitedCoutries] = useState([]);
+    const [visitedFlages, setVisitedFlags] = useState([])
 
     useEffect(() => {
         fetch('https://restcountries.com/v3.1/all')
@@ -14,13 +16,52 @@ const Countries = () => {
 
     }, [])
 
+    const handleVisitedCountry = country => {
+        console.log('add this to your visited country');
+        // console.log(country);
+        const newVisitedCountries = [...visitedCountries, country];
+        setVisitedCoutries(newVisitedCountries);
+    }
+
+
+    const handleVisitedFlags = flag => {
+        console.log('flag adding');
+        const newVisitedFlags = [...visitedFlages, flag];
+        setVisitedFlags(newVisitedFlags);
+    }
+
 
     return (
         <div>
             <h3>Countries: {countries.length}</h3>
-            {
-                countries.map(country => <Country key={country.cca3} country={country}></Country>) 
-            }
+            <div>
+                {/* Visited Country */}
+                <h5>Visited Countries: {visitedCountries.length}</h5>
+                <ul>
+                    {
+                        visitedCountries.map(country => <li key={countries.cca3}>{country.name.common}</li>)
+                    }
+                </ul>
+            </div>
+
+            {/* Visited Country Flags */}
+            <div className='flag-container'>
+                {
+                    visitedFlages.map((flag, idx) => <img key={idx} src={flag}></img>)
+                }
+            </div>
+
+            {/* Display Country */}
+            <div className='country-container'>
+                {
+                    countries.map(country => <Country
+                        key={country.cca3}
+                        handleVisitedCountry={handleVisitedCountry}
+                        handleVisitedFlags={handleVisitedFlags}
+                        country={country}>
+                    </Country>)
+                }
+            </div>
         </div>
     )
 }
